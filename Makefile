@@ -8,6 +8,7 @@ CPU = stm32wb55rg
 
 LD_DIR = ld
 SRC_DIR = src
+INC_DIR = inc
 OBJ_DIR = obj
 BIN_DIR = bin
 
@@ -19,7 +20,7 @@ LD_SCRIPT = $(LD_DIR)/$(CPU).ld
 LD_FLAGS = -T $(LD_SCRIPT)
 
 SRC_FILES := $(wildcard $(SRC_DIR)/*.s)
-INC_FILES := $(wildcard $(SRC_DIR)/*.inc)
+INC_FILES := $(wildcard $(INC_DIR)/*.s)
 OBJ_FILES := $(SRC_FILES:$(SRC_DIR)/%.s=$(OBJ_DIR)/%.o)
 OUT_DIRS := $(OBJ_DIR) $(BIN_DIR)
 

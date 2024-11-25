@@ -6,7 +6,7 @@
 .cpu cortex-m4
 .thumb
 
-.include "inc/stm32wb55rg.inc"
+.include "inc/stm32wb55rg.s"
 
 .global Main
 Main:
