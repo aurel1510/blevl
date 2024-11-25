@@ -4,7 +4,6 @@
 
 .syntax unified
 .cpu cortex-m4
-//.fpu softvpf
 .thumb
 
 .section .VectorTable, "a"

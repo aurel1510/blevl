@@ -4,15 +4,17 @@
 
 .syntax unified
 .cpu cortex-m4
-//.fpu softvpf
 .thumb
+
+.include "inc/stm32wb55rg.inc"
 
 .text
 .type ResetHandler, %function
 .global ResetHandler
 ResetHandler:
-    nop
-    bl Main
+    bl ResetStackPointer
+    bl InitUserLED
+    b Main
 
 .text
 .type USART1Handler, %function
