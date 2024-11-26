@@ -14,6 +14,7 @@
 ResetHandler:
     bl ResetStackPointer
     bl InitUserLED
+    bl InitUSART1
     b Main
 
 .text
