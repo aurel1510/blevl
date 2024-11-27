@@ -64,11 +64,13 @@
 .equ USART1SEL0, 0
 .equ USART1SEL1, 1
 
-// GPIO port B mode register
-.equ GPIOB_MODER, GPIOB_BoundaryAddress + 0x00
-.equ GPIOB_MODER_ResetValue, 0xFFFFFEBF
+// 9.5.1 GPIO port mode register (GPIOx_MODER)
+// (x =A to E and H)
+// Address offset:0x00
+.equ GPIOx_MODER_AddressOffset, 0x00
+// Bits 31:0 MODE[15:0][1:0]: Port x configuration I/O pin y (y = 15 to 0)
 // These bits are written by software to configure the I/O mode.
-// 00: Input mode
+// 00: Input mode 
 // 01: General purpose output mode
 // 10: Alternate function mode
 // 11: Analog mode (reset state)
@@ -104,10 +106,35 @@
 .equ MODE141, 29
 .equ MODE150, 30
 .equ MODE151, 31
+// GPIO port A mode register
+.equ GPIOA_MODER, GPIOA_BoundaryAddress + GPIOx_MODER_AddressOffset
+.equ GPIOA_MODER_ResetValue, 0xABFFFFFF
+// GPIO port B mode register
+.equ GPIOB_MODER, GPIOB_BoundaryAddress + GPIOx_MODER_AddressOffset
+.equ GPIOB_MODER_ResetValue, 0xFFFFFEBF
+// GPIO port C mode register
+.equ GPIOC_MODER, GPIOC_BoundaryAddress + GPIOx_MODER_AddressOffset
+.equ GPIOC_MODER_ResetValue, 0xFFFFFFFF
+// GPIO port D mode register
+.equ GPIOD_MODER, GPIOD_BoundaryAddress + GPIOx_MODER_AddressOffset
+.equ GPIOD_MODER_ResetValue, 0xFFFFFFFF
+// GPIO port E mode register
+// Port E[31:10] are reserved
+.equ GPIOE_MODER, GPIOE_BoundaryAddress + GPIOx_MODER_AddressOffset
+.equ GPIOE_MODER_ResetValue, 0x000003FF
+// GPIO port H mode register
+// Port H[31:8, 5:4] are reserved
+.equ GPIOH_MODER, GPIOH_BoundaryAddress + GPIOx_MODER_AddressOffset
+.equ GPIOH_MODER_ResetValue, 0x000000CF
 
-//GPIO port B output type register
-.equ GPIOB_OTYPER, GPIOB_BoundaryAddress + 0x04
-.equ GPIOB_OTYPER_ResetValue, 0x00000000
+// 9.5.2 GPIO port output type register (GPIOx_OTYPER)
+// (x = A to E and H)
+// Address offset: 0x04
+// Reset value: 0x0000 0000
+.equ GPIOx_OTYPER_AddressOffset, 0x04
+.equ GPIOx_OTYPER_ResetValue, 0x00000000
+// Bits 31:16 Reserved, must be kept at reset value.
+// Bits 15:0 OT[15:0]: Port x configuration I/O pin y (y = 15 to 0)
 // These bits are written by software to configure the I/O output type.
 // 0: Output push-pull (reset state)
 // 1: Output open-drain
@@ -127,11 +154,91 @@
 .equ OT13, 13
 .equ OT14, 14
 .equ OT15, 15
+// GPIO port A output type register
+.equ GPIOA_OTYPER, GPIOA_BoundaryAddress + GPIOx_OTYPER_AddressOffset
+// GPIO port B output type register
+.equ GPIOB_OTYPER, GPIOB_BoundaryAddress + GPIOx_OTYPER_AddressOffset
+// GPIO port C output type register
+.equ GPIOC_OTYPER, GPIOC_BoundaryAddress + GPIOx_OTYPER_AddressOffset
+// GPIO port D output type register
+.equ GPIOD_OTYPER, GPIOD_BoundaryAddress + GPIOx_OTYPER_AddressOffset
+// GPIO port E output type register
+// Port E[31:5] are reserved
+.equ GPIOE_OTYPER, GPIOE_BoundaryAddress + GPIOx_OTYPER_AddressOffset
+// GPIO port H output type register
+// Port H[31:4, 2] are reserved
+.equ GPIOH_OTYPER, GPIOH_BoundaryAddress + GPIOx_OTYPER_AddressOffset
 
-.equ GPIOB_OSPEEDR, GPIOB_BoundaryAddress + 0x08
+// 9.5.3 GPIO port output speed register (GPIOx_OSPEEDR)
+// (x = A to E and H)
+// Address offset: 0x08
+.equ GPIOx_OSPEEDR_AddressOffset, 0x08
+// Bits 31:0 OSPEED[15:0][1:0]: Port x configuration I/O pin y (y = 15 to 0)
+// These bits are written by software to configure the I/O output speed.
+// 00: Low speed
+// 01: Medium speed
+// 10: Fast speed
+// 11: High speed
+// Note: Refer to the device datasheet for the frequency specifications and the power supply 
+// and load conditions for each speed
+.equ OSPEED00, 0
+.equ OSPEED01, 1
+.equ OSPEED10, 2
+.equ OSPEED11, 3
+.equ OSPEED20, 4
+.equ OSPEED21, 5
+.equ OSPEED30, 6
+.equ OSPEED31, 7
+.equ OSPEED40, 8
+.equ OSPEED41, 9
+.equ OSPEED50, 10
+.equ OSPEED51, 11
+.equ OSPEED60, 12
+.equ OSPEED61, 13
+.equ OSPEED70, 14
+.equ OSPEED71, 15
+.equ OSPEED80, 16
+.equ OSPEED81, 17
+.equ OSPEED90, 18
+.equ OSPEED91, 19
+.equ OSPEED100, 20
+.equ OSPEED101, 21
+.equ OSPEED110, 22
+.equ OSPEED111, 23
+.equ OSPEED120, 24
+.equ OSPEED121, 25
+.equ OSPEED130, 26
+.equ OSPEED131, 27
+.equ OSPEED140, 28
+.equ OSPEED141, 29
+.equ OSPEED150, 30
+.equ OSPEED151, 31
+// GPIO port A output speed register
+.equ GPIOA_OSPEEDR, GPIOA_BoundaryAddress + GPIOx_OSPEEDR_AddressOffset
+.equ GPIOA_OSPEEDR_ResetValue,  0x0C000000
+// GPIO port B output speed register
+.equ GPIOB_OSPEEDR, GPIOB_BoundaryAddress + GPIOx_OSPEEDR_AddressOffset
+.equ GPIOB_OSPEEDR_ResetValue,  0x000000C0
+// GPIO port C output speed register
+.equ GPIOC_OSPEEDR, GPIOC_BoundaryAddress + GPIOx_OSPEEDR_AddressOffset
+.equ GPIOC_OSPEEDR_ResetValue,  0x00000000
+// GPIO port D output speed register
+.equ GPIOD_OSPEEDR, GPIOD_BoundaryAddress + GPIOx_OSPEEDR_AddressOffset
+.equ GPIOD_OSPEEDR_ResetValue,  0x00000000
+// GPIO port E output speed register
+// Port E[31:10] are reserved
+.equ GPIOE_OSPEEDR, GPIOE_BoundaryAddress + GPIOx_OSPEEDR_AddressOffset
+.equ GPIOE_OSPEEDR_ResetValue,  0x00000000
+// GPIO port H output speed register
+// Port H[31:8, 5:4] are reserved
+.equ GPIOH_OSPEEDR, GPIOH_BoundaryAddress + GPIOx_OSPEEDR_AddressOffset
+.equ GPIOH_OSPEEDR_ResetValue,  0x00000000
 
-// GPIO port B pull-up/pull-down register 
-.equ GPIOB_PUPDR, GPIOB_BoundaryAddress + 0x0C
+// 9.5.4 GPIO port pull-up/pull-down register (GPIOx_PUPDR)
+// (x = A to E and H)
+// Address offset: 0x0C
+.equ GPIOx_PUPDR_AddressOffset, 0x0C
+// Bits 31:0 PUPD[15:0][1:0]: Port x configuration I/O pin y (y = 15 to 0)
 // These bits are written by software to configure the I/O pull-up or pull-down
 // 00: No pull-up, pull-down
 // 01: Pull-up
@@ -169,13 +276,116 @@
 .equ PUPD141, 29
 .equ PUPD150, 30
 .equ PUPD151, 31
+// GPIO port A pull-up/pull-down register 
+.equ GPIOA_PUPDR, GPIOA_BoundaryAddress + GPIOx_PUPDR_AddressOffset
+.equ GPIOA_PUPDR_ResetValue, 0x64000000
+// GPIO port B pull-up/pull-down register 
+.equ GPIOB_PUPDR, GPIOB_BoundaryAddress + GPIOx_PUPDR_AddressOffset
+.equ GPIOB_PUPDR_ResetValue, 0x00000100
+// GPIO port C pull-up/pull-down register 
+.equ GPIOC_PUPDR, GPIOC_BoundaryAddress + GPIOx_PUPDR_AddressOffset
+.equ GPIOC_PUPDR_ResetValue, 0x00000000
+// GPIO port D pull-up/pull-down register 
+.equ GPIOD_PUPDR, GPIOD_BoundaryAddress + GPIOx_PUPDR_AddressOffset
+.equ GPIOD_PUPDR_ResetValue, 0x00000000
+// GPIO port E pull-up/pull-down register
+// Port E[31:10] are reserved
+.equ GPIOE_PUPDR, GPIOE_BoundaryAddress + GPIOx_PUPDR_AddressOffset
+.equ GPIOE_PUPDR_ResetValue, 0x00000000
+// GPIO port H pull-up/pull-down register
+// Port H[31:8, 5:4] are reserved
+.equ GPIOH_PUPDR, GPIOH_BoundaryAddress + GPIOx_PUPDR_AddressOffset
+.equ GPIOH_PUPDR_ResetValue, 0x00000000
 
-.equ GPIOB_IDR, GPIOB_BoundaryAddress + 0x10
-.equ GPIOB_ODR, GPIOB_BoundaryAddress + 0x14
+// 9.5.5 GPIO port input data register (GPIOx_IDR)
+// (x = A to E and H)
+// Address offset: 0x10
+// Reset value: 0x0000 XXXX
+.equ GPIOx_IDR_AddressOffset, 0x10
+// Bits 31:16 Reserved, must be kept at reset value.
+// Bits 15:0 ID[15:0]: Port x input data I/O pin y (y = 15 to 0)
+// These bits are read-only. They contain the input value of the corresponding I/O port.
+.equ ID0, 0
+.equ ID1, 1
+.equ ID2, 2
+.equ ID3, 3
+.equ ID4, 4
+.equ ID5, 5
+.equ ID6, 6
+.equ ID7, 7
+.equ ID8, 8
+.equ ID9, 9
+.equ ID10, 10
+.equ ID11, 11
+.equ ID12, 12
+.equ ID13, 13
+.equ ID14, 14
+.equ ID15, 15
+// GPIO port A input data register
+.equ GPIOA_IDR, GPIOA_BoundaryAddress + GPIOx_IDR_AddressOffset
+// GPIO port B input data register
+.equ GPIOB_IDR, GPIOB_BoundaryAddress + GPIOx_IDR_AddressOffset
+// GPIO port C input data register
+.equ GPIOC_IDR, GPIOC_BoundaryAddress + GPIOx_IDR_AddressOffset
+// GPIO port D input data register
+.equ GPIOD_IDR, GPIOD_BoundaryAddress + GPIOx_IDR_AddressOffset
+// GPIO port E input data register
+// Port E[31:5] are reserved
+.equ GPIOE_IDR, GPIOE_BoundaryAddress + GPIOx_IDR_AddressOffset
+// GPIO port H input data register
+// Port H[31:4, 2] are reserved
+.equ GPIOH_IDR, GPIOH_BoundaryAddress + GPIOx_IDR_AddressOffset
 
+// 9.5.6 GPIO port output data register (GPIOx_ODR)
+// (x = A to E and H)
+// Address offset: 0x14
+// Reset value: 0x0000 0000
+.equ GPIOx_ODR_AddressOffset, 0x14
+.equ GPIOx_ODR_ResetValue, 0x00000000
+// Bits 31:16 Reserved, must be kept at reset value.
+// Bits 15:0 OD[15:0]: Port output data I/O pin y (y = 15 to 0)
+// These bits can be read and written by software.
+// Note: For atomic bit set/reset, OD bits can be individually set and/or reset by writing to GPIO 
+// port bit set/reset register (GPIOx_BSRR) (x = A to E and H).
+.equ OD0, 0
+.equ OD1, 1
+.equ OD2, 2
+.equ OD3, 3
+.equ OD4, 4
+.equ OD5, 5
+.equ OD6, 6
+.equ OD7, 7
+.equ OD8, 8
+.equ OD9, 9
+.equ OD10, 10
+.equ OD11, 11
+.equ OD12, 12
+.equ OD13, 13
+.equ OD14, 14
+.equ OD15, 15
+// GPIO port A output data register
+.equ GPIOA_ODR, GPIOA_BoundaryAddress + GPIOx_ODR_AddressOffset
+// GPIO port B output data register
+.equ GPIOB_ODR, GPIOB_BoundaryAddress + GPIOx_ODR_AddressOffset
+// GPIO port C output data register
+.equ GPIOC_ODR, GPIOC_BoundaryAddress + GPIOx_ODR_AddressOffset
+// GPIO port D output data register
+.equ GPIOD_ODR, GPIOD_BoundaryAddress + GPIOx_ODR_AddressOffset
+// GPIO port E output data register
+// Port E[31:5] are reserved
+.equ GPIOE_ODR, GPIOE_BoundaryAddress + GPIOx_ODR_AddressOffset
+// GPIO port H output data register
+// Port H[31:4, 2] are reserved
+.equ GPIOH_ODR, GPIOH_BoundaryAddress + GPIOx_ODR_AddressOffset
+
+// 9.5.7 GPIO port bit set/reset register (GPIOx_BSRR)
+// (x = A to E and H)
+// Address offset: 0x18
+// Reset value: 0x0000 0000
 // GPIO port B bit set/reset register 
-.equ GPIOB_BSRR, GPIOB_BoundaryAddress + 0x18
-.equ GPIOB_BSRR_ResetValue, 0x00000000
+.equ GPIOx_BSRR_AddressOffset, 0x18
+.equ GPIOx_BSRR_ResetValue, 0x00000000
+// Bits 15:0 BS[15:0]: Port x set I/O pin y (y = 15 to 0)
 // These bits are write-only. A read to these bits returns the value 0x0000.
 // 0: No action on the corresponding ODx bit
 // 1: Sets the corresponding ODx bit
@@ -195,6 +405,7 @@
 .equ BS13, 13
 .equ BS14, 14
 .equ BS15, 15
+// Bits 31:16 BR[15:0]: Port x reset I/O pin y (y = 15 to 0)
 // These bits are write-only. A read to these bits returns the value 0x0000.
 // 0: No action on the corresponding ODx bit
 // 1: Resets the corresponding ODx bit
@@ -215,9 +426,119 @@
 .equ BR13, 29
 .equ BR14, 30
 .equ BR15, 31
+// GPIO port A bit set/reset register
+.equ GPIOA_BSRR, GPIOA_BoundaryAddress + GPIOx_BSRR_AddressOffset
+// GPIO port B bit set/reset register
+.equ GPIOB_BSRR, GPIOB_BoundaryAddress + GPIOx_BSRR_AddressOffset
+// GPIO port C bit set/reset register
+.equ GPIOC_BSRR, GPIOC_BoundaryAddress + GPIOx_BSRR_AddressOffset
+// GPIO port D bit set/reset register
+.equ GPIOD_BSRR, GPIOD_BoundaryAddress + GPIOx_BSRR_AddressOffset
+// GPIO port E bit set/reset register
+// Port E[31:21, 15:5] are reserved
+.equ GPIOE_BSRR, GPIOE_BoundaryAddress + GPIOx_BSRR_AddressOffset
+// GPIO port H bit set/reset register
+// Port H[31:20, 18, 15:4, 2] are reserved
+.equ GPIOH_BSRR, GPIOH_BoundaryAddress + GPIOx_BSRR_AddressOffset
 
-.equ GPIOB_LCKR, GPIOB_BoundaryAddress + 0x1C
-.equ GPIOB_AFRL, GPIOB_BoundaryAddress + 0x20
+// 9.5.8 GPIO port configuration lock register (GPIOx_LCKR)
+// (x = A to E and H)
+// This register is used to lock the configuration of the port bits when a correct write sequence 
+// is applied to bit 16 (LCKK). The value of bits [15:0] is used to lock the configuration of the 
+// GPIO. During the write sequence, the value of LCKR[15:0] must not change. When the 
+// LOCK sequence has been applied on a port bit, the value of this port bit can no longer be 
+// modified until the next MCU reset or peripheral reset.
+// Note: A specific write sequence is used to write to the GPIOx_LCKR register. Only word access 
+// (32-bit long) is allowed during this locking sequence.
+// Each lock bit freezes a specific configuration register (control and alternate function 
+// registers).
+// Address offset: 0x1C
+// Reset value: 0x0000 0000
+.equ GPIOx_LCKR_AddressOffset, 0x1C
+.equ GPIOx_LCKR_ResetValue, 0x00000000
+// Bits 15:0 LCK[15:0]: Port x lock I/O pin y (y = 15 to 0)
+// These bits are read/write but can only be written when the LCKK bit is ‘0.
+// 0: Port configuration not locked
+// 1: Port configuration locked
+.equ LCK0, 0
+.equ LCK1, 1
+.equ LCK2, 2
+.equ LCK3, 3
+.equ LCK4, 4
+.equ LCK5, 5
+.equ LCK6, 6
+.equ LCK7, 7
+.equ LCK8, 8
+.equ LCK9, 9
+.equ LCK10, 10
+.equ LCK11, 11
+.equ LCK12, 12
+.equ LCK13, 13
+.equ LCK14, 14
+.equ LCK15, 15
+// Bit 16 LCKK: Lock key
+// This bit can be read any time. It can only be modified using the lock key write sequence.
+// 0: Port configuration lock key not active
+// 1: Port configuration lock key active. The GPIOx_LCKR register is locked until the next MCU 
+// reset or peripheral reset.
+// LOCK key write sequence:
+// WR LCKR[16] = ‘1’ + LCKR[15:0]
+// WR LCKR[16] = ‘0’ + LCKR[15:0]
+// WR LCKR[16] = ‘1’ + LCKR[15:0]
+// RD LCKR
+// RD LCKR[16] = ‘1’ (this read operation is optional but it confirms that the lock is active)
+// Note: During the LOCK key write sequence, the value of LCK[15:0] must not change.
+// Any error in the lock sequence aborts the lock.
+// After the first lock sequence on any bit of the port, any read access on the LCKK bit 
+// returns ‘1’ until the next MCU reset or peripheral reset.
+.equ LCKK, 16
+// Bits 31:17 Reserved, must be kept at reset value.
+// GPIO port A configuration lock register
+.equ GPIOA_LCKR, GPIOA_BoundaryAddress + GPIOx_LCKR_AddressOffset
+// GPIO port B configuration lock register
+.equ GPIOB_LCKR, GPIOB_BoundaryAddress + GPIOx_LCKR_AddressOffset
+// GPIO port C configuration lock register
+.equ GPIOC_LCKR, GPIOC_BoundaryAddress + GPIOx_LCKR_AddressOffset
+// GPIO port D configuration lock register
+.equ GPIOD_LCKR, GPIOD_BoundaryAddress + GPIOx_LCKR_AddressOffset
+// GPIO port E configuration lock register
+// Port E[31:17, 15:5] are reserved
+.equ GPIOE_LCKR, GPIOE_BoundaryAddress + GPIOx_LCKR_AddressOffset
+// GPIO port H configuration lock register
+// Port H[31:17, 15:4, 2] are reserved
+.equ GPIOH_LCKR, GPIOH_BoundaryAddress + GPIOx_LCKR_AddressOffset
+
+// 9.5.9 GPIO alternate function low register (GPIOx_AFRL) 
+// (x = A to E and H)
+// Address offset: 0x20
+// Reset value: 0x0000 0000
+// Port E[31:20] are reserved
+// Port H[31:16, 11:8] are reserved
+.equ GPIOx_AFRL_AddressOffset, 0x20
+.equ GPIOx_AFRL_ResetValue, 0x00000000
+// Bits 31:0 AFSEL[7:0][3:0]: Alternate function selection for port x I/O pin y (y = 7 to 0)
+// These bits are written by software to configure alternate function I/Os.
+// 0000: AF0
+// 0001: AF1
+// 0010: AF2
+// 0011: AF3
+// 0100: AF4
+// 0101: AF5
+// 0110: AF6
+// 0111: AF7
+// 1000: AF8
+// 1001: AF9
+// 1010: AF10
+// 1011: AF11
+// 1100: AF12
+// 1101: AF13
+// 1110: AF14
+// 1111: AF15
+// TODO
+// GPIO port B alternate function low register
+.equ GPIOB_AFRL, GPIOB_BoundaryAddress + GPIOx_AFRL_AddressOffset
+
+
 .equ GPIOB_AFRH, GPIOB_BoundaryAddress + 0x24
 .equ GPIOB_BRR, GPIOB_BoundaryAddress + 0x28
 
