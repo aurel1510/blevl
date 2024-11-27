@@ -27,6 +27,7 @@ send:
     push { r0 }
     ldr r0, ='a'
     bl USART_Transmit
+    pop { r0 }
 
 delay_on:
     subs r2, #1
@@ -51,7 +52,8 @@ USART_Transmit:
     ldr r1, =USART_ISR
     wait_for_TXE:
         ldr r2, [r1]
-        tst r2, #(1<<TXE)
+        and r2, #(1<<TXE)
+        cmp r2, #(1<<TXE)
         bne wait_for_TXE
     ldr r1, =USART_TDR
     str r0, [r1]
