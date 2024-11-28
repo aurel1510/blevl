@@ -32,6 +32,26 @@ InitUSART1:
     lsl r2, #USART1SEL0
     orr r1, r2
     str r1, [r0]
+	// configure GPIO pins PB6 and PB7
+	// set alternate mode for USART1 through ST-Link USB
+	ldr r0, =GPIOB_BoundaryAddress
+	ldr r1, [r0, #GPIOx_MODER_AddressOffset]
+	and r1, #(~(0b1111<<MODE60))
+	orr r1, #(0b1010<<MODE60)
+	str r1, [r0, #GPIOx_MODER_AddressOffset]
+	// default output push-pull (reset state)
+	// set output speed low
+	ldr r1, [r0, #GPIOx_OSPEEDR_AddressOffset]
+	and r1, #(~(0b1111<<OSPEED60))
+	str r1, [r0, #GPIOx_OSPEEDR_AddressOffset]
+	// set pull-up
+	ldr r1, [r0, #GPIOx_PUPDR_AddressOffset]
+	orr r1, #(0b0101<<PUPD60)
+	str r1, [r0, #GPIOx_PUPDR_AddressOffset]
+	// select alternate mode AF7
+	ldr r1, [r0, #GPIOx_AFRL_AddressOffset]
+	orr r1, #(0b01110111<<AFSEL60)
+	str r1, [r0, #GPIOx_AFRL_AddressOffset]
     // set baud rate to 115200
     ldr r0, =USART_BRR
     ldr r1, =35
