@@ -20,6 +20,89 @@
 .equ GPIOB_BoundaryAddress, 0x48000400
 .equ GPIOA_BoundaryAddress, 0x48000000
 .equ USART1_BoundaryAddress, 0x40013800
+.equ SYSCFG_BoundaryAddress, 0x40010100
+
+// 14.6.1 EXTI rising trigger selection register (EXTI_RTSR1)
+// Address offset: 0x000
+// Reset value: 0x0000 0000
+// Contains only register bits for configurable events.
+.equ EXTI_RTSR1_AddressOffset, 0x000
+.equ EXTI_RTSR1_ResetValue, 0x00000000
+.equ EXTI_RTSR1, EXTI_BoundaryAddress + EXTI_RTSR1_AddressOffset
+// Bit 31 RT31: Rising trigger event configuration bit of configurable Event input 31(1).
+// 0: Rising trigger disabled (for event and Interrupt) for input line
+// 1: Rising trigger enabled (for event and Interrupt) for input line
+.equ RT1, 31
+// Bits 30:22 Reserved, must be kept at reset value.
+// Bits 21:0 RT[21:0]: Rising trigger event configuration bit of configurable event input x (x = 21 to 0)(1).
+// 0: Rising trigger disabled (for event and Interrupt) for input line
+// 1: Rising trigger enabled (for event and Interrupt) for input line
+.equ RT0, 0
+.equ RT1, 1
+.equ RT2, 2
+.equ RT3, 3
+.equ RT4, 4
+.equ RT5, 5
+.equ RT6, 6
+.equ RT7, 7
+.equ RT8, 8
+.equ RT9, 9
+.equ RT10, 10
+.equ RT11, 11
+.equ RT12, 12
+.equ RT13, 13
+.equ RT14, 14
+.equ RT15, 15
+.equ RT16, 16
+.equ RT17, 17
+.equ RT18, 18
+.equ RT19, 19
+.equ RT20, 20
+.equ RT21, 21
+// 1. The configurable event inputs are edge triggered, no glitch must be generated on these inputs. If a rising edge on the
+// configurable event input occurs during writing of the register, the associated pending bit is not set. Rising and falling edge
+// triggers can be set for the same configurable event input. In this case, both edges generate a trigger.
+
+// 14.6.2 EXTI falling trigger selection register (EXTI_FTSR1)
+// Address offset: 0x004
+// Reset value: 0x0000 0000
+// Contains only register bits for configurable events.
+.equ EXTI_FTSR1_AddressOffset, 0x000
+.equ EXTI_FTSR1_ResetValue, 0x00000000
+.equ EXTI_FTSR1, EXTI_BoundaryAddress + EXTI_FTSR1_AddressOffset
+// Bit 31 FT31: Falling trigger event configuration bit of configurable event input 31(1).
+// 0: Falling trigger disabled (for event and Interrupt) for input line
+// 1: Falling trigger enabled (for event and Interrupt) for input line.
+.equ FT31, 31
+// Bits 30:22 Reserved, must be kept at reset value.
+// Bits 21:0 FT[21:0]: Falling trigger event configuration bit of configurable event input x (x = 21 to 0)(1).
+// 0: Falling trigger disabled (for event and Interrupt) for input line
+// 1: Falling trigger enabled (for event and Interrupt) for input line.
+.equ FT0, 0
+.equ FT1, 1
+.equ FT2, 2
+.equ FT3, 3
+.equ FT4, 4
+.equ FT5, 5
+.equ FT6, 6
+.equ FT7, 7
+.equ FT8, 8
+.equ FT9, 9
+.equ FT10, 10
+.equ FT11, 11
+.equ FT12, 12
+.equ FT13, 13
+.equ FT14, 14
+.equ FT15, 15
+.equ FT16, 16
+.equ FT17, 17
+.equ FT18, 18
+.equ FT19, 19
+.equ FT20, 20
+.equ FT21, 21
+// 1. The configurable event inputs are edge triggered, no glitch must be generated on these inputs. If a falling edge on the
+// configurable event input occurs during writing of the register, the associated pending bit is not set. Rising and falling edge
+// triggers can be set for the same configurable event input. In this case, both edges generate a trigger.
 
 // 8.4.18 RCC AHB2 peripheral clock enable register (RCC_AHB2ENR)
 // Address offset: 0x04C
@@ -848,3 +931,71 @@
 // Note: This register must be written only when TXE/TXFNF = 1.
 .equ TDR0, 0
 
+// 10.2.3 SYSCFG external interrupt configuration register 1
+// (SYSCFG_EXTICR1)
+// Address offset: 0x008
+// Reset value: 0x0000 0000
+.equ SYSCFG_EXTICR1_AddressOffset, 0x008
+.equ SYSCFG_EXTICR1_ResetValue, 0x00000000
+.equ SYSCFG_EXTICR1, SYSCFG_BoundaryAddress + SYSCFG_EXTICR1_AddressOffset
+// Bits 31:15 Reserved, must be kept at reset value.
+// Bits 14:12 EXTI3[2:0]: EXTI 3 configuration bits
+// These bits are written by software to select the source input for the EXTI3
+// external interrupt.
+// 000: PA[3] pin
+// 001: PB[3] pin
+// 010: PC[3] pin (STM32WB55xx only)
+// 011: PD[3] pin (STM32WB55xx only)
+// 100: PE[3] pin (STM32WB55xx only)
+// 101: Reserved
+// 110: Reserved
+// 111: PH[3] pin
+.equ EXTI30, 12
+.equ EXTI31, 13
+.equ EXTI32, 14
+// Bit 11 Reserved, must be kept at reset value.
+// Bits 10:8 EXTI2[2:0]: EXTI 2 configuration bits
+// These bits are written by software to select the source input for the EXTI2
+// external interrupt.
+// 000: PA[2] pin
+// 001: PB[2] pin
+// 010: PC[2] pin (STM32WB55xx only)
+// 011: PD[2] pin (STM32WB55xx only)
+// 100: PE[2] pin (STM32WB55xx only)
+// 101: Reserved
+// 110: Reserved
+// 111: Reserved
+.equ EXTI20, 8
+.equ EXTI21, 9
+.equ EXTI22, 10
+// Bit 7 Reserved, must be kept at reset value.
+// Bits 6:4 EXTI1[2:0]: EXTI 1 configuration bits
+// These bits are written by software to select the source input for the EXTI1
+// external interrupt.
+// 000: PA[1] pin
+// 001: PB[1] pin
+// 010: PC[1] pin (STM32WB55xx only)
+// 011: PD[1] pin (STM32WB55xx only)
+// 100: PE[1] pin (STM32WB55xx only)
+// 101: Reserved
+// 110: Reserved
+// 111: PH[1] pin (STM32WB55xx only)
+.equ EXTI10, 4
+.equ EXTI11, 5
+.equ EXTI12, 6
+// Bit 3 Reserved, must be kept at reset value.
+// Bits 2:0 EXTI0[2:0]: EXTI 0 configuration bits
+// These bits are written by software to select the source input for the EXTI0
+// external interrupt.
+// 000: PA[0] pin
+// 001: PB[0] pin
+// 010: PC[0] pin (STM32WB55xx only)
+// 011: PD[0] pin (STM32WB55xx only)
+// 100: PE[0] pin (STM32WB55xx only)
+// 101: Reserved
+// 110: Reserved
+// 111: PH[0] pin (STM32WB55xx only)
+// Note: Some of the I/O pins mentioned in this register may be not available on small packages.
+.equ EXTI00, 0
+.equ EXTI01, 1
+.equ EXTI02, 2
