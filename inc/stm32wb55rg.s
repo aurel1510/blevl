@@ -6,6 +6,7 @@
 .cpu cortex-m4
 .thumb
 
+// Module configuration registers memory boundary addresses
 .equ BLE_CTRL_BoundaryAddress, 0x60000000
 .equ EXTI_BoundaryAddress, 0x58000800
 .equ PWR_BoundaryAddress, 0x58000400
@@ -26,11 +27,47 @@
 .equ RCC_AHB2ENR_AddressOffset, 0x04c
 .equ RCC_AHB2ENR_ResetValue, 0x00000000
 .equ RCC_AHB2ENR, RCC_BoundaryAddress + RCC_AHB2ENR_AddressOffset
+// Bit 0 GPIOAEN: CPU1 IO port A clock enable
+// Set and cleared by software.
+// 0: IO port A clock disabled for CPU1
+// 1: IO port A clock enabled for CPU1
+.equ GPIOAEN, 0
 // Bit 1 GPIOBEN: CPU1 IO port B clock enable
 // Set and cleared by software.
 // 0: IO port B clock disabled for CPU1
 // 1: IO port B clock enabled for CPU1
 .equ GPIOBEN, 1
+// Bit 2 GPIOCEN: CPU1 IO port C clock enable
+// Set and cleared by software.
+// 0: IO port C clock disabled for CPU1
+// 1: IO port C clock enabled for CPU1
+.equ GPIOCEN, 2
+// Bit 3 GPIODEN: CPU1 IO port D clock enable (STM32WB55xx only)
+// Set and cleared by software.
+// 0: IO port D clock disabled for CPU1
+// 1: IO port D clock enabled for CPU1
+// Note that this bit is reserved on STM32WB35xx
+.equ GPIODEN, 3
+// Bit 4 GPIOEEN: CPU1 IO port E clock enable
+// Set and cleared by software.
+// 0: IO port E clock disabled for CPU1
+// 1: IO port E clock enabled for CPU1
+.equ GPIOEEN, 4
+// Bit 7 GPIOHEN: CPU1 IO port H clock enable
+// Set and cleared by software.
+// 0: IO port H clock disabled for CPU1
+// 1: IO port H clock enabled for CPU1
+.equ GPIOHEN, 7
+// Bit 13 ADCEN: CPU1 ADC clocks enable
+// Set and cleared by software.
+// 0: ADC bus and kernel clocks disabled for CPU1
+// 1: ADC bus and kernel clocks enabled for CPU1
+.equ ADCEN, 13
+// Bit 16 AES1EN: CPU1 AES1 accelerator clock enable
+// Set and cleared by software.
+// 0: AES clock disabled for CPU1
+// 1: AES clock enabled for CPU1
+.equ AES1EN, 16
 
 // 8.4.22 RCC APB2 peripheral clock enable register (RCC_APB2ENR)
 // Address: 0x060
@@ -512,8 +549,6 @@
 // (x = A to E and H)
 // Address offset: 0x20
 // Reset value: 0x0000 0000
-// Port E[31:20] are reserved
-// Port H[31:16, 11:8] are reserved
 .equ GPIOx_AFRL_AddressOffset, 0x20
 .equ GPIOx_AFRL_ResetValue, 0x00000000
 // Bits 31:0 AFSEL[7:0][3:0]: Alternate function selection for port x I/O pin y (y = 7 to 0)
@@ -534,13 +569,131 @@
 // 1101: AF13
 // 1110: AF14
 // 1111: AF15
-// TODO
+.equ AFSEL00, 0
+.equ AFSEL01, 1
+.equ AFSEL02, 2
+.equ AFSEL03, 3
+.equ AFSEL10, 4
+.equ AFSEL11, 5
+.equ AFSEL12, 6
+.equ AFSEL13, 7
+.equ AFSEL20, 8
+.equ AFSEL21, 9
+.equ AFSEL22, 10
+.equ AFSEL23, 11
+.equ AFSEL30, 12
+.equ AFSEL31, 13
+.equ AFSEL32, 14
+.equ AFSEL33, 15
+.equ AFSEL40, 16
+.equ AFSEL41, 17
+.equ AFSEL42, 18
+.equ AFSEL43, 19
+.equ AFSEL50, 20
+.equ AFSEL51, 21
+.equ AFSEL52, 22
+.equ AFSEL53, 23
+.equ AFSEL60, 24
+.equ AFSEL61, 25
+.equ AFSEL62, 26
+.equ AFSEL63, 27
+.equ AFSEL70, 28
+.equ AFSEL71, 29
+.equ AFSEL72, 30
+.equ AFSEL73, 31
+// GPIO port A alternate function low register
+.equ GPIOA_AFRL, GPIOA_BoundaryAddress + GPIOx_AFRL_AddressOffset
 // GPIO port B alternate function low register
 .equ GPIOB_AFRL, GPIOB_BoundaryAddress + GPIOx_AFRL_AddressOffset
+// GPIO port C alternate function low register
+.equ GPIOC_AFRL, GPIOC_BoundaryAddress + GPIOx_AFRL_AddressOffset
+// GPIO port D alternate function low register
+.equ GPIOD_AFRL, GPIOD_BoundaryAddress + GPIOx_AFRL_AddressOffset
+// GPIO port E alternate function low register
+// Port E[31:20] are reserved
+.equ GPIOE_AFRL, GPIOE_BoundaryAddress + GPIOx_AFRL_AddressOffset
+// GPIO port H alternate function low register
+// Port H[31:16, 11:8] are reserved
+.equ GPIOH_AFRL, GPIOH_BoundaryAddress + GPIOx_AFRL_AddressOffset
 
+// 9.5.10 GPIO alternate function high register (GPIOx_AFRH)
+// (x = A to E and H)
+// Address offset: 0x24
+// Reset value: 0x0000 0000
+.equ GPIOx_AFRH_AddressOffset, 0x24
+.equ GPIOx_AFRH_ResetValue, 0x00000000
+// Bits 31:0 AFSEL[15:8][3:0]: Alternate function selection for port x I/O pin y (y = 15 to 8)
+// These bits are written by software to configure alternate function I/Os.
+// 0000: AF0
+// 0001: AF1
+// 0010: AF2
+// 0011: AF3
+// 0100: AF4
+// 0101: AF5
+// 0110: AF6
+// 0111: AF7
+// 1000: AF8
+// 1001: AF9
+// 1010: AF10
+// 1011: AF11
+// 1100: AF12
+// 1101: AF13
+// 1110: AF14
+// 1111: AF15
+.equ AFSEL80, 0
+.equ AFSEL81, 1
+.equ AFSEL82, 2
+.equ AFSEL83, 3
+.equ AFSEL90, 4
+.equ AFSEL91, 5
+.equ AFSEL92, 6
+.equ AFSEL93, 7
+.equ AFSEL100, 8
+.equ AFSEL101, 9
+.equ AFSEL102, 10
+.equ AFSEL103, 11
+.equ AFSEL110, 12
+.equ AFSEL111, 13
+.equ AFSEL112, 14
+.equ AFSEL113, 15
+.equ AFSEL120, 16
+.equ AFSEL121, 17
+.equ AFSEL122, 18
+.equ AFSEL123, 19
+.equ AFSEL130, 20
+.equ AFSEL131, 21
+.equ AFSEL132, 22
+.equ AFSEL133, 23
+.equ AFSEL140, 24
+.equ AFSEL141, 25
+.equ AFSEL142, 26
+.equ AFSEL143, 27
+.equ AFSEL150, 28
+.equ AFSEL151, 29
+.equ AFSEL152, 30
+.equ AFSEL153, 31
+// GPIO port A alternate function high register
+.equ GPIOA_AFRH, GPIOA_BoundaryAddress + GPIOx_AFRH_AddressOffset
+// GPIO port B alternate function high register
+.equ GPIOB_AFRH, GPIOB_BoundaryAddress + GPIOx_AFRH_AddressOffset
+// GPIO port C alternate function high register
+.equ GPIOC_AFRH, GPIOC_BoundaryAddress + GPIOx_AFRH_AddressOffset
+// GPIO port D alternate function high register
+.equ GPIOD_AFRH, GPIOD_BoundaryAddress + GPIOx_AFRH_AddressOffset
+// GPIO port E alternate function high register
+// Port E[31:0] are reserved
+.equ GPIOE_AFRH, GPIOE_BoundaryAddress + GPIOx_AFRH_AddressOffset
+// GPIO port H alternate function high register
+// Port H[31:0] are reserved
+.equ GPIOH_AFRH, GPIOH_BoundaryAddress + GPIOx_AFRH_AddressOffset
 
-.equ GPIOB_AFRH, GPIOB_BoundaryAddress + 0x24
-.equ GPIOB_BRR, GPIOB_BoundaryAddress + 0x28
+// 9.5.11 GPIO port bit reset register (GPIOx_BRR) (x = A to E and H)
+// Address offset: 0x28
+// Reset value: 0x0000 0000
+.equ GPIOx_BRR_BoundaryAddress, 0x28
+.equ GPIOx_BRR_ResetValue, 0x00000000
+// use BSRR instead!
+// has conflicting BR definitions!
 
 // 33.8.2 USART control register 1 [alternate] (USART_CR1)
 // Address offset: 0x00
