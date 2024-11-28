@@ -15,7 +15,7 @@
 .type ResetHandler, %function
 .global ResetHandler
 ResetHandler:
-	// SP reset by default
+    // SP reset by default
     bl InitUserLED
     bl InitUSART1
     b Main
