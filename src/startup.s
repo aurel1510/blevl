@@ -1,6 +1,9 @@
-//
-// startup.s
-//
+/*
+ * blevl/src/startup.s
+ * 
+ * - Contains all module initialization
+ * and configuration subroutines.
+ */
 
 .syntax unified
 .cpu cortex-m4
@@ -9,37 +12,31 @@
 .include "inc/stm32wb55rg.s"
 
 .text
-.type ResetStackPointer, %function
-.global ResetStackPointer
-ResetStackPointer:
-    bx lr
-
-.text
 .type InitUSART1, %function
 .global InitUSART1
 InitUSART1:
-    // enable clock for USART1
-    ldr r0, =RCC_APB2ENR
-    ldr r1, [r0]
-    ldr r2, =0b1
-    lsl r2, #USART1EN
-    orr r1, r2
-    str r1, [r0]
+	// clock configuration
+    // enable clock signal for GPIO port B module
+	ldr r0, =RCC_BoundaryAddress
+	ldr r1, [r0, #RCC_AHB2ENR_AddressOffset]
+	orr r1, #(0b1<<GPIOBEN)
+	str r1, [r0, #RCC_AHB2ENR_AddressOffset]
+    // enable clock signal for USART1
+	ldr r1, [r0, #RCC_APB2ENR_AddressOffset]
+	orr r1, #(0b1<<USART1EN)
+	str r1, [r0, #RCC_APB2ENR_AddressOffset]
     // select system clock
-    ldr r0, =RCC_CCIPR
-    ldr r1, [r0]
-    ldr r2, =0b01
-    lsl r2, #USART1SEL0
-    orr r1, r2
-    str r1, [r0]
+	ldr r1, [r0, #RCC_CCIPR_AddressOffset]
+	orr r1, #(0b01<<USART1SEL0)
+	str r1, [r0, #RCC_CCIPR_AddressOffset]
 	// configure GPIO pins PB6 and PB7
-	// set alternate mode for USART1 through ST-Link USB
+	// default output push-pull (reset state)
+	// set alternate mode for USART1 via ST-Link USB
 	ldr r0, =GPIOB_BoundaryAddress
 	ldr r1, [r0, #GPIOx_MODER_AddressOffset]
 	and r1, #(~(0b1111<<MODE60))
 	orr r1, #(0b1010<<MODE60)
 	str r1, [r0, #GPIOx_MODER_AddressOffset]
-	// default output push-pull (reset state)
 	// set output speed low
 	ldr r1, [r0, #GPIOx_OSPEEDR_AddressOffset]
 	and r1, #(~(0b1111<<OSPEED60))
@@ -52,76 +49,43 @@ InitUSART1:
 	ldr r1, [r0, #GPIOx_AFRL_AddressOffset]
 	orr r1, #(0b01110111<<AFSEL60)
 	str r1, [r0, #GPIOx_AFRL_AddressOffset]
+	// USART1 module configuration
     // set baud rate to 115200
-    ldr r0, =USART_BRR
-    ldr r1, =35
-    str r1, [r0]
-    // enable RX interrupts
-    ldr r0, =USART_CR1
-    ldr r1, [r0]
-    ldr r2, =0b1
-    lsl r2, #RXNEIE
-    orr r1, r2
-    // enable TX
-    ldr r2, =0b1
-    lsl r2, #TE
-    orr r1, r2
-    // enable RX
-    ldr r2, =0b1
-    lsl r2, #RE
-    orr r1, r2
-    // enable USART1
-    ldr r2, =0b1
-    lsl r2, #UE
-    orr r1, r2
-    str r1, [r0]
+	ldr r0, =USART1_BoundaryAddress
+	ldr r1, =(4000000/115200) // 35
+	str r1, [r0, #USART_BRR_AddressOffset]
+    // enable TX and RX, RX interrupts and USART1
+	ldr r1, [r0, #USART_CR1_AddressOffset]
+	orr r1, #((1<<RXNEIE)|(1<<TE)|(1<<RE)|(1<<UE))
+    str r1, [r0, #USART_CR1_AddressOffset]
     bx lr
 
 .text
 .type InitUserLED, %function
 .global InitUserLED
 InitUserLED:
-    // enable clock signal for GPIOB module
-    ldr r0, =RCC_AHB2ENR
-    ldr r1, [r0]
-    ldr r2, =0b1
-    lsl r2, #GPIOBEN
-    orr r1, r2
-    str r1, [r0]
-    // set PB5 to general output mode
-    ldr r0, =GPIOB_MODER
-    ldr r1, [r0]
-    ldr r2, =0b11
-    lsl r2, #MODE50
-    mvn r2, r2
-    and r1, r2
-    ldr r2, =0b01
-    lsl r2, #MODE50
-    orr r1, r2
-    str r1, [r0]
-    // set PB5 output type to push-pull
-    ldr r0, =GPIOB_OTYPER
-    ldr r1, [r0]
-    ldr r2, =0b1
-    lsl r2, #OT5
-    mvn r2, r2
-    and r1, r2
-    str r1, [r0]
+	// clock configuration
+    // enable clock signal for GPIO port B module
+	ldr r0, =RCC_BoundaryAddress
+	ldr r1, [r0, #RCC_AHB2ENR_AddressOffset]
+	orr r1, #(0b1<<GPIOBEN)
+	str r1, [r0, #RCC_AHB2ENR_AddressOffset]
+	// configure GPIO port B pin 5
+	// default output push-pull (reset state)
+	// default low speed (reset state)
+	ldr r0, =GPIOB_BoundaryAddress
+	// set PB5 to general output mode
+	ldr r1, [r0, #GPIOx_MODER_AddressOffset]
+	and r1, #(~(0b11<<MODE50))
+	orr r1, #(0b01<<MODE50)
+	str r1, [r0, #GPIOx_MODER_AddressOffset]
     // set PB5 to pull-up
-    ldr r0, =GPIOB_PUPDR
-    ldr r1, [r0]
-    ldr r2, =0b11
-    lsl r2, #PUPD50
-    mvn r2, r2
-    and r1, r2
-    ldr r2, =0b01
-    lsl r2, #PUPD50
-    orr r1, r2
-    str r1, [r0]
-    // set bit in GPIOB_ODR for PB5 to high
-    ldr r0, =GPIOB_BSRR
-    ldr r1, =0b1
-    lsl r1, #BS5
-    str r1, [r0]
+	// for some reason not working without r2
+	ldr r1, [r0, #GPIOx_PUPDR_AddressOffset]
+	ldr r2, =(~(0b11<<PUPD50))
+	and r1, r2
+	ldr r2, =(0b01<<PUPD50)
+	orr r1, r2
+	str r1, [r0, #GPIOx_PUPDR_AddressOffset]
     bx lr
 

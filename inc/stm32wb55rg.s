@@ -1,6 +1,9 @@
-//
-// stm32wb55rg.inc
-//
+/*
+ * blevl/inc/stm32wb55rg.s
+ *
+ * - Contains peripheral modules constants
+ * native to the STM32WB55RG MCU.
+ */
 
 .syntax unified
 .cpu cortex-m4

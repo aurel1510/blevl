@@ -1,6 +1,9 @@
 #
 # blevl/Makefile
 #
+# - Contains the compilation, linking,
+# deployment and debugging logic scripts.
+#
 
 SHELL = /bin/sh
 TARGET = blevl.elf

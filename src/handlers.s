@@ -1,6 +1,9 @@
-//
-// handlers.s
-//
+/*
+ * blevl/src/handlers.s
+ *
+ * - This source file contains all interrupt
+ * handler subroutines.
+ */
 
 .syntax unified
 .cpu cortex-m4
@@ -12,7 +15,7 @@
 .type ResetHandler, %function
 .global ResetHandler
 ResetHandler:
-    bl ResetStackPointer
+	// SP reset by default
     bl InitUserLED
     bl InitUSART1
     b Main
