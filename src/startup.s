@@ -10,6 +10,7 @@
 .thumb
 
 .include "inc/stm32wb55rg.s"
+.include "inc/armv7m.s"
 
 .text
 .type InitUSART1, %function
@@ -58,6 +59,12 @@ InitUSART1:
     ldr r1, [r0, #USART_CR1_AddressOffset]
     orr r1, #((1<<RXNEIE)|(1<<TE)|(1<<RE)|(1<<UE))
     str r1, [r0, #USART_CR1_AddressOffset]
+	// enable USART1 in ARM NVIC IRQ control register
+	ldr r0, =NVIC_BoundaryAddress
+	ldr r1, [r0, #NVIC_ISER1_AddressOffset]
+    ldr r2, =(0b1<<SETENA4)
+    orr r1, r2
+	str r1, [r0, #NVIC_ISER1_AddressOffset]
     bx lr
 
 .text
@@ -89,3 +96,57 @@ InitUserLED:
     str r1, [r0, #GPIOx_PUPDR_AddressOffset]
     bx lr
 
+.text
+.type InitUserButton, %function
+.global InitUserButton
+InitUserButton:
+    // clock configuration
+    // enable clock signal for GPIO port D module
+    ldr r0, =RCC_BoundaryAddress
+    ldr r1, [r0, #RCC_AHB2ENR_AddressOffset]
+    ldr r2, =(0b1<<GPIODEN)
+    orr r1, r2
+    str r1, [r0, #RCC_AHB2ENR_AddressOffset]
+    // configure GPIO port D pin 0
+    // default input push-pull (reset state)
+    // default low speed (reset state)
+    ldr r0, =GPIOD_BoundaryAddress
+    // set PD0 to input mode
+    ldr r1, [r0, #GPIOx_MODER_AddressOffset]
+    ldr r2, =(~(0b11<<MODE00))
+    and r1, r2
+    str r1, [r0, #GPIOx_MODER_AddressOffset]
+    // set PD0 to pull-up
+    ldr r1, [r0, #GPIOx_PUPDR_AddressOffset]
+    ldr r2, =(~(0b11<<PUPD00))
+    and r1, r2
+    ldr r2, =(0b01<<PUPD00)
+    orr r1, r2
+    str r1, [r0, #GPIOx_PUPDR_AddressOffset]
+	// select PD0 for EXTI line 0 input pin
+	ldr r0, =SYSCFG_BoundaryAddress
+	ldr r1, [r0, #SYSCFG_EXTICR1_AddressOffset]
+    ldr r2, =(0b011<<EXTI00)
+    orr r1, r2
+	str r1, [r0, #SYSCFG_EXTICR1_AddressOffset]
+	// enable rising edge trigger on line 0
+	//ldr r0, =EXTI_BoundaryAddress
+	//ldr r1, [r0, #EXTI_RTSR1_AddressOffset]
+    //ldr r2, =(0b1<<RT0)
+    //orr r1, r2
+	//str r1, [r0, #EXTI_RTSR1_AddressOffset]
+	// enable falling edge trigger on line 0
+	ldr r1, [r0, #EXTI_FTSR1_AddressOffset]
+    ldr r2, =(0b1<<FT0)
+    orr r1, r2
+	str r1, [r0, #EXTI_FTSR1_AddressOffset]
+	// enable EXTI0 in ARM NVIC IRQ control register
+	ldr r0, =NVIC_BoundaryAddress
+	ldr r1, [r0, #NVIC_ISER0_AddressOffset]
+    ldr r2, =(0b1<<SETENA6)
+    orr r1, r2
+	str r1, [r0, #NVIC_ISER0_AddressOffset]
+	// set port D bit 0 high
+    //ldr r1, =(0b1<<BS0)
+    //str r1, [r0, #GPIOx_BSRR_AddressOffset]
+    bx lr

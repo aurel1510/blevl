@@ -12,6 +12,93 @@
 .section .VectorTable, "a"
 .word _StackEnd
 .word ResetHandler
-.space 0xC4
+
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+
+.word SystickHandler
+
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+
+.word EXTI0Handler
+
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+
 .word USART1Handler
-.space 0x64
+
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+.word DefaultHandler
+
+.type DefaultHandler, %function
+.global DefaultHandler
+DefaultHandler:
+	bkpt
+	b.n DefaultHandler
